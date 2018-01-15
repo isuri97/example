@@ -96,7 +96,7 @@ public class ResourceUtils {
     }
 */
 /*
-    public static void handleErrorResponse(UmaException umaException) {
+    public static void handleErrorResponse(UMAException umaException) {
 
 
         ResourceConstants resourceConstants = new ResourceConstants();

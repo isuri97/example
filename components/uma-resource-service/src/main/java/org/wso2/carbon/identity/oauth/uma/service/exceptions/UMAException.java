@@ -3,30 +3,30 @@ package org.wso2.carbon.identity.oauth.uma.service.exceptions;
 /**
  * Created by isuri on 1/10/18.
  */
-public class UmaException extends Exception {
+public class UMAException extends Exception {
 
     private String errorCode;
     private String errorDescription;
     private int statusCode;
 
 
-    public UmaException(String message) {
+    public UMAException(String message) {
 
         super(message);
     }
 
-    public UmaException(String message, Throwable throwable) {
+    public UMAException(String message, Throwable throwable) {
 
         super(message, throwable);
     }
 
-    public UmaException(String errorcode, String message) {
+    public UMAException(String errorcode, String message) {
 
         super(message);
         this.errorCode = errorcode;
     }
 
-    public UmaException(String errorCode, String message, Throwable throwable) {
+    public UMAException(String errorCode, String message, Throwable throwable) {
 
         super(message, throwable);
         this.errorCode = errorCode;

@@ -12,7 +12,7 @@ public class ErrorDTO {
     private String code = null;
 
 
-    private String message = null;
+   // private String message = null;
 
 
     private String description = null;
@@ -35,7 +35,7 @@ public class ErrorDTO {
 
     /**
      **/
-    @ApiModelProperty(value = "")
+   /* @ApiModelProperty(value = "")
     @JsonProperty("message")
     public String getMessage() {
 
@@ -46,7 +46,7 @@ public class ErrorDTO {
 
         this.message = message;
     }
-
+*/
 
     /**
      **/
@@ -70,7 +70,7 @@ public class ErrorDTO {
         sb.append("class ErrorDTO {\n");
 
         sb.append("  code: ").append(code).append("\n");
-        sb.append("  message: ").append(message).append("\n");
+       // sb.append("  message: ").append(message).append("\n");
         sb.append("  description: ").append(description).append("\n");
         sb.append("}\n");
         return sb.toString();

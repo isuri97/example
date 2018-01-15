@@ -6,24 +6,24 @@ import org.wso2.carbon.identity.oauth.uma.service.ResourceConstants;
 /**
  * Created by isuri on 1/10/18.
  */
-public class UmaServiceException extends UmaException {
+public class UMAServiceException extends UMAException {
 
-    public UmaServiceException(String message) {
+    public UMAServiceException(String message) {
 
         super(message);
     }
 
-    public UmaServiceException(ResourceConstants.ErrorMessages message1, String throwable) {
+    public UMAServiceException(ResourceConstants.ErrorMessages message1, String throwable) {
 
         super(message1.getMessage(), throwable);
     }
 
-    public UmaServiceException(String errorcode, String message) {
+    public UMAServiceException(String errorcode, String message) {
 
         super(errorcode, message);
     }
 
-    public UmaServiceException(String errorCode, Throwable throwable, String message) {
+    public UMAServiceException(String errorCode, Throwable throwable, String message) {
 
         super(errorCode, message, throwable);
     }

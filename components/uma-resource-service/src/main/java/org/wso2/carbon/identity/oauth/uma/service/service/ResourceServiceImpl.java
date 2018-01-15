@@ -21,9 +21,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth.uma.service.ResourceService;
 import org.wso2.carbon.identity.oauth.uma.service.dao.ResourceDAO;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.UmaEndpointLayerException;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.UmaException;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.UmaServiceException;
+import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAClientException;
+import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAException;
+import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAServiceException;
 import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
 
 import java.sql.SQLException;
@@ -41,18 +41,18 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public ResourceRegistration registerResourceSet(ResourceRegistration resourceRegistration) throws
-            UmaException {
+            UMAException {
         // check whether the resource id is provided
         if (StringUtils.isBlank(resourceRegistration.getName())) {
             String errorMessage = "Resource name can not be null.";
-            throw new UmaEndpointLayerException(404, errorMessage);
+            throw new UMAClientException(404, errorMessage);
         } else {
             try {
 
                 resourceRegistration = resourceDAO.registerResourceSet(resourceRegistration);
-            } catch (UmaServiceException e) {
+            } catch (UMAServiceException e) {
                 String errorMessage = "Resource id is not persistant on db.";
-                throw new UmaEndpointLayerException(404, "Resource id not found", errorMessage);
+                throw new UMAClientException(404, "Resource id not found", errorMessage);
             }
 
             return resourceRegistration;
@@ -64,10 +64,10 @@ public class ResourceServiceImpl implements ResourceService {
      *
      * @param resourceOwnerId To ientify resources belongs to same owner
      * @return resource list
-     * @throws UmaException
+     * @throws UMAException
      */
     @Override
-    public List<String> getResourceSetIds(String resourceOwnerId) throws UmaException {
+    public List<String> getResourceSetIds(String resourceOwnerId) throws UMAException {
         // return resourceDAO.retrieveResourceIDs(accessToken);
 
         List<String> resourceRegistration = null;
@@ -76,9 +76,9 @@ public class ResourceServiceImpl implements ResourceService {
         try {
             resourceRegistration = resourceDAO.retrieveResourceIDs(resourceOwnerId);
 
-        } catch (UmaServiceException e) {
+        } catch (UMAServiceException e) {
             String errorMessage = "Resource Owner id is not persistant on db.";
-            throw new UmaEndpointLayerException(404, "Resource List not found", errorMessage);
+            throw new UMAClientException(404, "Resource List not found", errorMessage);
         }
 
         return resourceRegistration;
@@ -88,25 +88,25 @@ public class ResourceServiceImpl implements ResourceService {
     /**
      * @param resourceid resource ID of the resource which need to get retrieved
      * @return Retrieved resource using resource ID
-     * @throws UmaException
+     * @throws UMAException
      */
     @Override
     public ResourceRegistration getResourceSetById(String resourceid)
-            throws UmaServiceException, UmaEndpointLayerException {
+            throws UMAServiceException, UMAClientException {
 
 
         ResourceRegistration resourceRegistration = null;
 
         if (isResourceId(resourceid)) {
             String errorMessage = "Resource id is not in defined format.";
-            throw new UmaEndpointLayerException(400, "invalid_resource_id", errorMessage);
+            throw new UMAClientException(400, "invalid_resource_id", errorMessage);
 
         } else {
             try {
                 resourceRegistration = resourceDAO.retrieveResourceset(resourceid);
-            } catch (UmaServiceException e) {
+            } catch (UMAServiceException e) {
                 String errorMessage = "Resource id is not persistant on db.";
-                throw new UmaEndpointLayerException(404, "Resource id not found", errorMessage);
+                throw new UMAClientException(404, "Resource id not found", errorMessage);
             }
             return resourceRegistration;
 
@@ -118,23 +118,23 @@ public class ResourceServiceImpl implements ResourceService {
      *
      * @param resourceRegistration details of updated resource
      * @return updated resource
-     * @throws UmaException
+     * @throws UMAException
      */
     @Override
     public ResourceRegistration updateResourceSet(String resourceid, ResourceRegistration resourceRegistration)
-            throws SQLException, UmaException {
+            throws SQLException, UMAException {
 
 
         if (isResourceId(resourceid)) {
             String errorMessage = "Resource id is not in defined format.";
-            throw new UmaEndpointLayerException(400, "invalid_resource_id", errorMessage);
+            throw new UMAClientException(400, "invalid_resource_id", errorMessage);
 
         } else {
             try {
                 resourceDAO.updateResourceSet(resourceid, resourceRegistration);
-            } catch (UmaServiceException e) {
+            } catch (UMAServiceException e) {
                 String errorMessage = "Resource id is not persistant on db.";
-                throw new UmaEndpointLayerException(404, "Resource id not found", errorMessage);
+                throw new UMAClientException(404, "Resource id not found", errorMessage);
             }
             return resourceRegistration;
         }
@@ -144,23 +144,23 @@ public class ResourceServiceImpl implements ResourceService {
      * Delete the resource for the given resource ID
      *
      * @param resourceid Resource ID of the resource which need to get deleted
-     * @throws UmaException
+     * @throws UMAException
      */
     @Override
-    public boolean deleteResourceSet(String resourceid) throws UmaException, SQLException {
+    public boolean deleteResourceSet(String resourceid) throws UMAException, SQLException {
 
         ResourceRegistration resourceRegistration = null;
 
         if (isResourceId(resourceid)) {
             String errorMessage = "Resource id is not in defined format.";
-            throw new UmaEndpointLayerException(400, "invalid_resource_id", errorMessage);
+            throw new UMAClientException(400, "invalid_resource_id", errorMessage);
 
         } else {
             try {
                 resourceDAO.deleteResourceSet(resourceid);
-            } catch (UmaServiceException e) {
+            } catch (UMAServiceException e) {
                 String errorMessage = "Resource id is not persistant on db.";
-                throw new UmaEndpointLayerException(404, "Resource id not found", errorMessage);
+                throw new UMAClientException(404, "Resource id not found", errorMessage);
             }
         }
 

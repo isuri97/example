@@ -25,8 +25,6 @@ import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.oauth.uma.service.dao.util.DAOUtils;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.ResourceException;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.ResourceServerException;
 import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
 
 import java.sql.Connection;

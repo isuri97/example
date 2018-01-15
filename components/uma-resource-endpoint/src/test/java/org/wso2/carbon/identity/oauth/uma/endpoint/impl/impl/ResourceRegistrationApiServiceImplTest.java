@@ -28,8 +28,6 @@ import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ResourceDetailsDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.impl.exceptions.ResourceEndpointException;
 import org.wso2.carbon.identity.oauth.uma.endpoint.impl.util.ResourceUtils;
 import org.wso2.carbon.identity.oauth.uma.service.ResourceConstants;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.ResourceException;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.ResourceServiceClientException;
 import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
 import org.wso2.carbon.identity.oauth.uma.service.service.ResourceServiceImpl;
 

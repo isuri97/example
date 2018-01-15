@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.oauth.uma.service.dao.ResourceDAO;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.ResourceServerException;
 import org.wso2.carbon.identity.oauth.uma.service.model.MetaData;
 import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
 

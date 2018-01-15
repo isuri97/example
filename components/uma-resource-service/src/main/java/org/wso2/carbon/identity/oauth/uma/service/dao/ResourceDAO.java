@@ -20,7 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.oauth.uma.service.ResourceConstants;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.UmaServiceException;
+import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAServiceException;
 import org.wso2.carbon.identity.oauth.uma.service.model.MetaData;
 import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
 
@@ -44,10 +44,10 @@ public class ResourceDAO {
      *
      * @param resourceRegistration details of the registered resource
      * @return resourceId of resgistered resource description
-     * @throws UmaServiceException ResourceException
+     * @throws UMAServiceException ResourceException
      */
     public ResourceRegistration registerResourceSet(ResourceRegistration resourceRegistration)
-            throws UmaServiceException {
+            throws UMAServiceException {
 
         String resourcesql = SQLQueries.INSERT_RESOURCE;
         String metadatasql = SQLQueries.INSERT_INTO_RESOURCE_META_DATA;
@@ -81,7 +81,7 @@ public class ResourceDAO {
         } catch (SQLException e) {
             log.error("Error when retrieving the resource description. ");
             String errordescription = "Resource Id can not be found in data base";
-            throw new UmaServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
+            throw new UMAServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
                     errordescription);
         }
         return resourceRegistration;
@@ -92,9 +92,9 @@ public class ResourceDAO {
      *
      * @param resourceid Id of the resource
      * @return resource description for the provided ID
-     * @throws UmaServiceException
+     * @throws UMAServiceException
      */
-    public ResourceRegistration retrieveResourceset(String resourceid) throws UmaServiceException {
+    public ResourceRegistration retrieveResourceset(String resourceid) throws UMAServiceException {
 
         String sql = SQLQueries.GET_ALL_RESOURCE_FROM_ID;
         ResourceRegistration resourceRegistration = new ResourceRegistration();
@@ -148,7 +148,7 @@ public class ResourceDAO {
         } catch (SQLException e) {
             log.error("Error when retrieving the resource description. ");
             String errordescription = "Resource Id can not be found in data base";
-            throw new UmaServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
+            throw new UMAServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
                     errordescription);
 
         }
@@ -160,9 +160,9 @@ public class ResourceDAO {
      *
      * @param resourceOwnerId ResourceOwner ID
      * @return available resource list
-     * @throws UmaServiceException
+     * @throws UMAServiceException
      */
-    public List<String> retrieveResourceIDs(String resourceOwnerId) throws UmaServiceException {
+    public List<String> retrieveResourceIDs(String resourceOwnerId) throws UMAServiceException {
 
         List<String> resourceSetIdList = new ArrayList<>();
         String sql = SQLQueries.GET_RESOURCE_IDS;
@@ -182,7 +182,7 @@ public class ResourceDAO {
         } catch (SQLException e) {
             log.error("Error when retrieving the resource description. ");
             String errordescription = "Resource Id can not be found in data base";
-            throw new UmaServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
+            throw new UMAServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
                     errordescription);
         }
         return resourceSetIdList;
@@ -192,9 +192,9 @@ public class ResourceDAO {
      * Delete a resource description of the provided resource ID
      *
      * @param resourceid Resource ID of the resource
-     * @throws UmaServiceException
+     * @throws UMAServiceException
      */
-    public boolean deleteResourceSet(String resourceid) throws SQLException, UmaServiceException {
+    public boolean deleteResourceSet(String resourceid) throws SQLException, UMAServiceException {
 
         String sql = SQLQueries.DELETE_RESOURCE_BY_ID;
 
@@ -208,7 +208,7 @@ public class ResourceDAO {
             } catch (SQLException e) {
                 log.error("Error when retrieving the resource description. ");
                 String errordescription = "Resource Id can not be found in data base";
-                throw new UmaServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
+                throw new UMAServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
                         errordescription);
             }
         }
@@ -219,10 +219,10 @@ public class ResourceDAO {
      *
      * @param resourceRegistration details of the updated resource
      * @param resourceid           Resource ID of the resource
-     * @throws UmaServiceException
+     * @throws UMAServiceException
      */
     public boolean updateResourceSet(String resourceid, ResourceRegistration resourceRegistration)
-            throws SQLException, UmaServiceException {
+            throws SQLException, UMAServiceException {
 
         int resultSet = 0;
 
@@ -251,7 +251,7 @@ public class ResourceDAO {
         } catch (SQLException e) {
             log.error("Error when retrieving the resource description. ");
             String errorMessage = "Error occured when updating resource description.";
-            throw new UmaServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
+            throw new UMAServiceException(ResourceConstants.ErrorMessages.ERROR_CODE_FAIL_TO_GET_RESOURCE,
                     errorMessage);
         }
     }

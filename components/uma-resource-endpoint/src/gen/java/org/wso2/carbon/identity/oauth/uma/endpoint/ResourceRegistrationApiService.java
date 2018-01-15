@@ -1,10 +1,6 @@
 package org.wso2.carbon.identity.oauth.uma.endpoint;
 
-import org.wso2.carbon.identity.oauth.uma.endpoint.*;
-import org.wso2.carbon.identity.oauth.uma.endpoint.dto.*;
-
 import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ResourceDetailsDTO;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.UmaException;
 
 import javax.ws.rs.core.Response;
 

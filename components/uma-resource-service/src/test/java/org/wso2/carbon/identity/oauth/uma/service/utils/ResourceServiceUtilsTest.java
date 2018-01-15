@@ -20,8 +20,6 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.oauth.uma.service.ResourceConstants;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.ResourceServerException;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.ResourceServiceClientException;
 
 public class ResourceServiceUtilsTest {
 

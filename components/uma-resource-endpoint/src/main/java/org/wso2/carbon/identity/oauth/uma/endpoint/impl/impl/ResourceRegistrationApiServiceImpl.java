@@ -26,9 +26,9 @@ import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ResourceDetailsDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.impl.util.ResourceUtils;
 import org.wso2.carbon.identity.oauth.uma.service.ResourceConstants;
 
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.UmaEndpointLayerException;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.UmaException;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.UmaServerException;
+import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAClientException;
+import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAException;
+import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAServerException;
 import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
 
 import java.util.List;
@@ -66,12 +66,12 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
                     .registerResourceSet(ResourceUtils.getResource(requestedResource));
             createResourceDTO = ResourceUtils.createResponse(registerResource);
             response = Response.ok().entity(createResourceDTO).build();
-        } catch (UmaEndpointLayerException e) {
+        } catch (UMAClientException e) {
             handleErrorResponse(e);
             LOG.error("Invalid request.Request valid resource Id to delete the resource. ", e);
             return Response.status(status).entity(errorDTO).build();
 
-        } catch (UmaServerException e) {
+        } catch (UMAServerException e) {
             handleErrorResponse(e);
             LOG.error("Invalid request. ", e);
             return Response.serverError().build();
@@ -101,7 +101,7 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
             resourceRegistration = ResourceUtils.getResourceService().getResourceSetById(resourceId);
             readResourceDTO = ResourceUtils.readResponse(resourceRegistration);
             response = Response.ok().entity(readResourceDTO).build();
-        } catch (UmaEndpointLayerException e) {
+        } catch (UMAClientException e) {
             handleErrorResponse(e);
             LOG.error("Invalid request.Request with valid resource Id to update the resource. ", e);
             return Response.status(status).entity(errorDTO).build();
@@ -129,12 +129,12 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
             try {
                 resourceRegistration = ResourceUtils.getResourceService().getResourceSetIds(resourceOwnerId);
                 response = Response.ok().entity(resourceRegistration).build();
-            } catch (UmaEndpointLayerException e) {
+            } catch (UMAClientException e) {
                 handleErrorResponse(e);
                 LOG.error("Invalid request.Request with valid resource Id to update the resource. ", e);
                 return Response.status(status).entity(errorDTO).build();
 
-            } catch (UmaException e) {
+            } catch (UMAException e) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
         } else {
@@ -160,11 +160,11 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
             resourceRegistration = ResourceUtils.getResourceService().updateResourceSet(resourceId, ResourceUtils.
                     getResource(updatedResource));
             response = Response.ok().entity(updatedResource).build();
-        } catch (UmaEndpointLayerException e) {
+        } catch (UMAClientException e) {
             handleErrorResponse(e);
             LOG.error("Invalid request.Request with valid resource Id to update the resource. ", e);
             return Response.status(status).entity(errorDTO).build();
-        } catch (UmaServerException e) {
+        } catch (UMAServerException e) {
             handleErrorResponse(e);
             LOG.error("Invalid request. ", e);
             return Response.serverError().build();
@@ -190,12 +190,12 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
 
         try {
             ResourceUtils.getResourceService().deleteResourceSet(resourceId);
-        } catch (UmaEndpointLayerException e) {
+        } catch (UMAClientException e) {
             handleErrorResponse(e);
             LOG.error("Invalid request.Request valid resource Id to delete the resource. ", e);
             return Response.status(status).entity(errorDTO).build();
 
-        } catch (UmaServerException e) {
+        } catch (UMAServerException e) {
             handleErrorResponse(e);
             LOG.error("Invalid request. ", e);
             return Response.serverError().build();
@@ -208,7 +208,7 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
     }
 
 
-    public static void handleErrorResponse(UmaException umaException) {
+    public static void handleErrorResponse(UMAException umaException) {
 
         ResourceConstants resourceConstants = new ResourceConstants();
         int statusCode = umaException.getStatusCode();
