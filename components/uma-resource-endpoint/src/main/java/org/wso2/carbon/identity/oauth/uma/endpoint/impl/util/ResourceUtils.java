@@ -23,7 +23,7 @@ import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ReadResourceDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ResourceDetailsDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.dto.UpdateResourceDTO;
 import org.wso2.carbon.identity.oauth.uma.service.ResourceService;
-import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
+import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistation;
 
 
 /**
@@ -36,118 +36,25 @@ public class ResourceUtils {
         return (ResourceService) PrivilegedCarbonContext.getThreadLocalCarbonContext()
                 .getOSGiService(ResourceService.class, null);
     }
-
-
-    /**
-     * Logs the error, builds a ScopeEndpointException with specified details and throws it
-     *
-     * @param status    response status
-     * @param message   error message
-     * @param throwable throwable
-     * @throws ResourceEndpointException
-     */
-    /*public static void handleErrorResponse(Response.Status status, String message, Throwable throwable,
-                                           boolean isServerException, Log log)
-            throws ResourceEndpointException {
-
-        String errorCode;
-        if (throwable instanceof ResourceException) {
-            errorCode = ((ResourceException) throwable).toString();
-        } else {
-            errorCode = ResourceConstants.ErrorMessages.ERROR_CODE_UNEXPECTED.getCode();
-        }
-
-        if (isServerException) {
-            if (throwable == null) {
-                log.error(message);
-            } else {
-                log.error(message, throwable);
-            }
-        }
-        throw buildResourceEndpointException(status, message, errorCode,
-                throwable == null ? "" : throwable.getMessage(),
-                isServerException);
-    }
-
-    public static ResourceEndpointException buildResourceEndpointException(Response.Status status, String message,
-                                                                            String code, String description,
-                                                                            boolean isServerException) {
-
-        ErrorDTO errorDTO = getErrorDTO(message, code, description);
-        if (isServerException) {
-            return new ResourceEndpointException(status);
-        } else {
-            return new ResourceEndpointException(status, errorDTO);
-        }
-    }
-
-    *//**
-     * Returns a generic errorDTO
-     *
-     * @return A generic errorDTO with the specified details
-     *//*
-    public static ErrorDTO getErrorDTO(String message, String code, String description) {
-
-        ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setCode(code);
-        errorDTO.setMessage(message);
-        errorDTO.setDescription(description);
-        return errorDTO;
-    }
-*/
-/*
-    public static void handleErrorResponse(UMAException umaException) {
-
-
-        ResourceConstants resourceConstants = new ResourceConstants();
-        int statusCode = umaException.getStatusCode();
-        status = Response.Status.fromStatusCode(statusCode);
-        errorDTO.setCode(resourceConstants.getCode());
-        errorDTO.setDescription(resourceConstants.getMap().get(statusCode).getMessage());
-
-    }*/
-
-
-    /**
-     * Returns a generic resourceDetailsDTO
-     *
-     * @param resourceRegistration specifies the details carried out by the ResourceRegistration
-     * @return A generic resourceDetailsDTO details
-     */
-    public static ResourceDetailsDTO getResourceDTO(ResourceRegistration resourceRegistration) {
-
-        ResourceDetailsDTO resourceDetailsDTO = new ResourceDetailsDTO();
-        resourceDetailsDTO.setName(resourceDetailsDTO.getName());
-        resourceDetailsDTO.setResource_scopes(resourceDetailsDTO.getResource_scopes());
-        resourceDetailsDTO.setIcon_uri(resourceDetailsDTO.getIcon_uri());
-        resourceDetailsDTO.setDescription(resourceDetailsDTO.getDescription());
-        resourceDetailsDTO.setType(resourceDetailsDTO.getType());
-        return resourceDetailsDTO;
-    }
-
-
     /**
      * Returns a resourceRegistration object
      *
      * @param resourceDetailsDTO specifies the details carried out by the ResourceDetailsDTO
      * @return A generic resourceregistration with the specified details
      */
-    public static ResourceRegistration getResource(ResourceDetailsDTO resourceDetailsDTO) {
+    public static ResourceRegistation getResource(ResourceDetailsDTO resourceDetailsDTO) {
 
-        ResourceRegistration resourceRegistration = new ResourceRegistration();
+        ResourceRegistation resourceRegistration = new ResourceRegistation();
         resourceRegistration.setName(resourceDetailsDTO.getName());
         resourceRegistration.setScopes(resourceDetailsDTO.getResource_scopes());
         if (resourceDetailsDTO.getIcon_uri() != null) {
-            resourceRegistration.setIcon_uri("icon_uri", resourceDetailsDTO.getIcon_uri());
-            resourceRegistration.getPropertyData().add(resourceRegistration.getIconuri());
+            resourceRegistration.getMetaData().put("icon_uri", resourceDetailsDTO.getIcon_uri());
         }
         if (resourceDetailsDTO.getType() != null) {
-            resourceRegistration.setType("type", resourceDetailsDTO.getType());
-            resourceRegistration.getPropertyData().add(resourceRegistration.getType());
+            resourceRegistration.getMetaData().put("type", resourceDetailsDTO.getType());
         }
         if (resourceDetailsDTO.getDescription() != null) {
-            resourceRegistration.setDescription("description", resourceDetailsDTO.getDescription());
-            resourceRegistration.getPropertyData().add(resourceRegistration.getDescription());
+            resourceRegistration.getMetaData().put("description", resourceDetailsDTO.getDescription());
         }
         return resourceRegistration;
     }
@@ -155,17 +62,17 @@ public class ResourceUtils {
     /**
      * Returns a ReadResourceDTO object
      *
-     * @param resourceRegistration specifies the details carried out by the ResourceRegistration Model class
+     * @param resourceRegistration specifies the details carried out by the ResourceRegistation Model class
      * @return A generic readresourceDTO with the specified details
      */
-    public static ReadResourceDTO readResponse(ResourceRegistration resourceRegistration) {
+    public static ReadResourceDTO readResponse(ResourceRegistation resourceRegistration) {
 
         ReadResourceDTO readResourceDTO = new ReadResourceDTO();
         readResourceDTO.setResourceId(resourceRegistration.getResourceId());
         readResourceDTO.setName(resourceRegistration.getName());
-        readResourceDTO.setType(resourceRegistration.getType().getData());
-        readResourceDTO.setDescription(resourceRegistration.getDescription().getData());
-        readResourceDTO.setIcon_uri(resourceRegistration.getIconuri().getData());
+        readResourceDTO.setType(resourceRegistration.getMetaData().get("type"));
+        readResourceDTO.setDescription(resourceRegistration.getMetaData().get("description"));
+        readResourceDTO.setIcon_uri(resourceRegistration.getMetaData().get("icon_uri"));
         readResourceDTO.setResource_scope(resourceRegistration.getScopes());
         return readResourceDTO;
     }
@@ -173,10 +80,10 @@ public class ResourceUtils {
     /**
      * Returns a CreateResourceDTO object
      *
-     * @param resourceRegistration specifies the details carried out by the ResourceRegistration Model class
+     * @param resourceRegistration specifies the details carried out by the ResourceRegistation Model class
      * @return A generic createResourceDTO with the specified details
      */
-    public static CreateResourceDTO createResponse(ResourceRegistration resourceRegistration) {
+    public static CreateResourceDTO createResponse(ResourceRegistation resourceRegistration) {
 
         CreateResourceDTO createResourceDTO = new CreateResourceDTO();
 
@@ -187,17 +94,17 @@ public class ResourceUtils {
     /**
      * Returns a UpdateResourceDTO object
      *
-     * @param resourceRegistration specifies the details carried out by the ResourceRegistration Model class
+     * @param resourceRegistration specifies the details carried out by the ResourceRegistation Model class
      * @return A generic updateResourceDTO with the specified details
      */
-    public static UpdateResourceDTO updateResponse(ResourceRegistration resourceRegistration) {
+    public static UpdateResourceDTO updateResponse(ResourceRegistation resourceRegistration) {
 
         UpdateResourceDTO updateResourceDTO = new UpdateResourceDTO();
         //updateResourceDTO.setResourceId(resourceRegistration.getResourceId());
         return updateResourceDTO;
     }
 
-    public static ListReadResourceDTO listResourceId(ResourceRegistration resourceRegistration) {
+    public static ListReadResourceDTO listResourceId(ResourceRegistation resourceRegistration) {
 
         ListReadResourceDTO listReadResourceDTO = new ListReadResourceDTO();
         // listReadResourceDTO.setResourceId(resourceRegistration.getResourceId());

@@ -25,7 +25,9 @@ import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.oauth.uma.service.dao.util.DAOUtils;
-import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
+import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAException;
+import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAServiceException;
+import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -77,16 +79,16 @@ public class ResourceDAOTest extends DAOUtils {
         };
     }
 
-    @Test(expectedExceptions = ResourceServerException.class)
-    public void testRegisterResourceSet() throws ResourceException, SQLException {
+    @Test(expectedExceptions = UMAServiceException.class)
+    public void testRegisterResourceSet() throws UMAException, SQLException {
 
         try (Connection connection = getConnection(DB_NAME)) {
             mockStatic(JDBCPersistenceManager.class);
             when(JDBCPersistenceManager.getInstance()).thenReturn(jdbcPersistenceManager);
             when(jdbcPersistenceManager.getDBConnection()).thenReturn(connection);
             ResourceDAO resourceDAO = new ResourceDAO();
-            ResourceRegistration resourceRegistration = new ResourceRegistration();
-            resourceDAO.registerResourceSet(resourceRegistration);
+            ResourceRegistation resourceRegistration = new ResourceRegistation();
+            resourceDAO.registerResource(resourceRegistration);
 
         }
     }
@@ -100,7 +102,7 @@ public class ResourceDAOTest extends DAOUtils {
             when(jdbcPersistenceManager.getDBConnection()).thenReturn(connection);
             ResourceDAO resourceDAO = new ResourceDAO();
 
-            resourceDAO.retrieveResourceset(resourceId);
+            resourceDAO.retrieveResource(resourceId);
         }
     }
 
@@ -118,7 +120,7 @@ public class ResourceDAOTest extends DAOUtils {
 
     }
 
-    @Test(expectedExceptions = ResourceServerException.class)
+    @Test(expectedExceptions = UMAServiceException.class)
     public void testUpdateResourceSet() throws Exception {
 
         try (Connection connection = getConnection(DB_NAME)) {
@@ -126,13 +128,13 @@ public class ResourceDAOTest extends DAOUtils {
             when(JDBCPersistenceManager.getInstance()).thenReturn(jdbcPersistenceManager);
             when(jdbcPersistenceManager.getDBConnection()).thenReturn(connection);
             ResourceDAO resourceDAO = new ResourceDAO();
-            ResourceRegistration resourceRegistration = new ResourceRegistration();
-            resourceDAO.updateResourceSet(resourceId, resourceRegistration);
+            ResourceRegistation resourceRegistration = new ResourceRegistation();
+            resourceDAO.updateResource(resourceId, resourceRegistration);
 
         }
     }
 
-    @Test(expectedExceptions = ResourceServerException.class)
+    @Test(expectedExceptions = UMAServiceException.class)
     public void testDeleteResourceSet() throws Exception {
 
         final String deleteSql = "SELECT * FROM IDN_RESOURCE WHERE RESOURCE_ID = ?";
@@ -143,7 +145,7 @@ public class ResourceDAOTest extends DAOUtils {
             when(JDBCPersistenceManager.getInstance()).thenReturn(jdbcPersistenceManager);
             when(jdbcPersistenceManager.getDBConnection()).thenReturn(connection);
             ResourceDAO resourceDAO = new ResourceDAO();
-            resourceDAO.deleteResourceSet(resourceId);
+            resourceDAO.deleteResource(resourceId);
 
             PreparedStatement statement = connection.prepareStatement(deleteSql);
             statement.setString(1, resourceId);

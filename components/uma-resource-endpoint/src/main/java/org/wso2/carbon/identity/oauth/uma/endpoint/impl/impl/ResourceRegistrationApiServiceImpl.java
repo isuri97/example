@@ -23,13 +23,13 @@ import org.wso2.carbon.identity.oauth.uma.endpoint.dto.CreateResourceDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ErrorDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ReadResourceDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ResourceDetailsDTO;
+import org.wso2.carbon.identity.oauth.uma.endpoint.impl.exceptions.ResourceEndpointException;
 import org.wso2.carbon.identity.oauth.uma.endpoint.impl.util.ResourceUtils;
 import org.wso2.carbon.identity.oauth.uma.service.ResourceConstants;
 
 import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAClientException;
 import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAException;
-import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAServerException;
-import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
+import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistation;
 
 import java.util.List;
 import javax.ws.rs.core.Response;
@@ -39,9 +39,8 @@ import javax.ws.rs.core.Response;
  */
 public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiService {
 
-    private static final Log LOG = LogFactory.getLog(ResourceRegistrationApiServiceImpl.class);
+    private static final Log log = LogFactory.getLog(ResourceRegistrationApiServiceImpl.class);
     private static Response.Status status;
-    private static ErrorDTO errorDTO = new ErrorDTO();
 
 
     /**
@@ -55,30 +54,31 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
 
         CreateResourceDTO createResourceDTO;
         Response response = null;
-        ResourceRegistration registerResource;
+        ResourceRegistation registerResource;
 
         if (requestedResource == null) {
-            LOG.error("Request body cannot be empty.");
+            log.error("Request body cannot be empty.");
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+
         try {
             registerResource = ResourceUtils.getResourceService()
                     .registerResourceSet(ResourceUtils.getResource(requestedResource));
             createResourceDTO = ResourceUtils.createResponse(registerResource);
             response = Response.ok().entity(createResourceDTO).build();
         } catch (UMAClientException e) {
-            handleErrorResponse(e);
-            LOG.error("Invalid request.Request valid resource Id to delete the resource. ", e);
-            return Response.status(status).entity(errorDTO).build();
+            handleErrorResponse(e,log);
+            //Log.info("Invalid request.Request valid resource Id to delete the resource. ", e);
+           /* return Response.status(status).entity(errorDTO).build();*/
 
-        } catch (UMAServerException e) {
-            handleErrorResponse(e);
-            LOG.error("Invalid request. ", e);
-            return Response.serverError().build();
-
+        /*} catch (UMAServerException e) {
+            handleErrorResponse(e,log);
+            log.error("Invalid request. ", e);
+           *//* return Response.serverError().build();*//*
+*/
         } catch (Throwable throwable) {
-            LOG.error("Internal server error occurred. ", throwable);
-            return Response.serverError().build();
+            log.error("Internal server error occurred. ", throwable);
+            /*return Response.serverError().build();*/
         }
 
         return response;
@@ -94,7 +94,7 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
     public Response getResource(String resourceId) {
 
         Response response = null;
-        ResourceRegistration resourceRegistration;
+        ResourceRegistation resourceRegistration;
         ReadResourceDTO readResourceDTO;
 
         try {
@@ -102,12 +102,12 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
             readResourceDTO = ResourceUtils.readResponse(resourceRegistration);
             response = Response.ok().entity(readResourceDTO).build();
         } catch (UMAClientException e) {
-            handleErrorResponse(e);
-            LOG.error("Invalid request.Request with valid resource Id to update the resource. ", e);
-            return Response.status(status).entity(errorDTO).build();
+            handleErrorResponse(e,log);
+            log.error("Invalid request.Request with valid resource Id to update the resource. ", e);
+            //return Response.status(status).entity(errorDTO).build();
 
         } catch (Throwable throwable) {
-            LOG.error("Internal server error occurred. ", throwable);
+            log.error("Internal server error occurred. ", throwable);
             return Response.serverError().build();
         }
         return response;
@@ -123,25 +123,23 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
     @Override
     public Response getresourceIds(String resourceOwnerId) {
         // For testing purpose current resource owner id is taken to validate pat access token
-        Response response = null;
-        List<String> resourceRegistration = null;
-        if (resourceOwnerId != "123") {
-            try {
-                resourceRegistration = ResourceUtils.getResourceService().getResourceSetIds(resourceOwnerId);
-                response = Response.ok().entity(resourceRegistration).build();
-            } catch (UMAClientException e) {
-                handleErrorResponse(e);
-                LOG.error("Invalid request.Request with valid resource Id to update the resource. ", e);
-                return Response.status(status).entity(errorDTO).build();
 
-            } catch (UMAException e) {
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            }
-        } else {
+        resourceOwnerId = "123";
+        try {
+            List<String> resourceRegistration = ResourceUtils.getResourceService().getResourceSetIds(resourceOwnerId);
+            Response response = Response.ok().entity(resourceRegistration).build();
+            return response;
+        } catch (UMAClientException e) {
+            handleErrorResponse(e, log);
+            log.error("Invalid request.Request with valid resource Id to update the resource. ", e);
+            //return Response.status(status).entity(errorDTO).build();
+
+        } catch (UMAException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return response;
+        return null;
     }
+
 
     /**
      * Update a resource
@@ -153,7 +151,7 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
     @Override
     public Response updateResource(String resourceId, ResourceDetailsDTO updatedResource) {
 
-        ResourceRegistration resourceRegistration;
+        ResourceRegistation resourceRegistration;
         Response response = null;
         //ReadResourceDTO resourceDetailsDTO;
         try {
@@ -161,17 +159,13 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
                     getResource(updatedResource));
             response = Response.ok().entity(updatedResource).build();
         } catch (UMAClientException e) {
-            handleErrorResponse(e);
-            LOG.error("Invalid request.Request with valid resource Id to update the resource. ", e);
-            return Response.status(status).entity(errorDTO).build();
-        } catch (UMAServerException e) {
-            handleErrorResponse(e);
-            LOG.error("Invalid request. ", e);
-            return Response.serverError().build();
+            handleErrorResponse(e,log);
+            log.error("Invalid request.Request with valid resource Id to update the resource. ", e);
+            /*return Response.status(status).entity(errorDTO).build();*/
 
         } catch (Throwable throwable) {
-            LOG.error("Internal server error occurred. ", throwable);
-            return Response.serverError().build();
+            log.error("Internal server error occurred. ", throwable);
+            /*return Response.serverError().build();*/
         }
         return response;
     }
@@ -191,30 +185,91 @@ public class ResourceRegistrationApiServiceImpl extends ResourceRegistrationApiS
         try {
             ResourceUtils.getResourceService().deleteResourceSet(resourceId);
         } catch (UMAClientException e) {
-            handleErrorResponse(e);
-            LOG.error("Invalid request.Request valid resource Id to delete the resource. ", e);
-            return Response.status(status).entity(errorDTO).build();
+            handleErrorResponse(e,log);
+            log.error("Invalid request.Request valid resource Id to delete the resource. ", e);
+           // return Response.status(status).entity(errorDTO).build();
 
-        } catch (UMAServerException e) {
-            handleErrorResponse(e);
-            LOG.error("Invalid request. ", e);
-            return Response.serverError().build();
-
+        /*} catch (UMAServerException e) {
+            handleErrorResponse(e,log);
+            log.error("Invalid request. ", e);
+            //return Response.serverError().build();
+*/
         } catch (Throwable throwable) {
-            LOG.error("Internal server error occurred. ", throwable);
-            return Response.serverError().build();
+            log.error("Internal server error occurred. ", throwable);
+            //return Response.serverError().build();
         }
         return response;
     }
 
 
-    public static void handleErrorResponse(UMAException umaException) {
+ /*   public ErrorDTO handleErrorResponse(UMAException umaException) {
 
         ResourceConstants resourceConstants = new ResourceConstants();
+        ErrorDTO errorDTO = new ErrorDTO();
         int statusCode = umaException.getStatusCode();
-        status = Response.Status.fromStatusCode(statusCode);
+        Response.Status status = Response.Status.fromStatusCode(statusCode);
         errorDTO.setCode(resourceConstants.getCode());
         errorDTO.setDescription(resourceConstants.getMap().get(statusCode).getMessage());
+        return errorDTO;
 
+    }*/
+
+    private static void handleErrorResponse(UMAException umaException, Log log) throws ResourceEndpointException {
+
+        String code = umaException.getErrorCode();
+
+        String statusCode;
+        String errorCode = null;
+        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        boolean isStatusOnly = true;
+
+        if (code != null) {
+           /* org.wso2.carbon.identity.oauth.uma.endpoint.impl.impl.ResourceEndpointConstants;
+            if (org.wso2.carbon.identity.oauth.uma.endpoint.PermissionEndpointConstants.responseDataMap.containsKey(code)) {
+                statusCode = org.wso2.carbon.identity.oauth.uma.endpoint.PermissionEndpointConstants.responseDataMap.get(code)[0];
+                errorCode = org.wso2.carbon.identity.oauth.uma.endpoint.PermissionEndpointConstants.responseDataMap.get(code)[1];
+                status = Response.Status.fromStatusCode(Integer.parseInt(statusCode));
+                isStatusOnly = false;*/
+            }
+        }
+
+
+    private static void handleErrorResponse(Response.Status status, Throwable throwable,
+                                            boolean isServerException, Log log)
+            throws ResourceEndpointException {
+
+        String code;
+        if (throwable instanceof UMAException) {
+            code = ((UMAException) throwable).getErrorCode();
+        } else {
+            code = ResourceConstants.ErrorMessages.ERROR_UNEXPECTED.getCode();
+        }
+
+        if (isServerException) {
+            if (throwable == null) {
+                log.error(status.getReasonPhrase());
+            } else {
+                log.error(status.getReasonPhrase(), throwable);
+            }
+        }
+        throw buildResourceEndpointException(status, code, throwable == null ? "" : throwable.getMessage(),
+                isServerException);
     }
+
+    private static ResourceEndpointException buildResourceEndpointException(Response.Status status,
+                                                                                String errorCode, String description,
+                                                                                boolean isStatus) {
+        if (isStatus) {
+            return new ResourceEndpointException(status);
+        } else {
+            ErrorDTO errorDTO = new ErrorDTO();
+            errorDTO.setCode(errorCode);
+            errorDTO.setDescription(description);
+            return new ResourceEndpointException(status, errorDTO);
+        }
+    }
+
 }
+
+
+

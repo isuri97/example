@@ -28,6 +28,10 @@ public class UMAServiceException extends UMAException {
         super(errorCode, message, throwable);
     }
 
+    public UMAServiceException(String message, Throwable e){
+        super(message,e);
+    }
+
     public String getErrorDescription() {
 
         String errorDescription = this.getMessage();

@@ -18,12 +18,15 @@ package org.wso2.carbon.identity.oauth.uma.service.model;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
 /**
  * Results holder for resource management Code validation query
  */
-public class ResourceRegistration {
+public class ResourceRegistation {
 
     private String resourceId;
 
@@ -33,127 +36,140 @@ public class ResourceRegistration {
 
     private String tenentId;
 
-    public MetaData type = new MetaData();
-
-    public MetaData iconuri = new MetaData();
-
-    private MetaData description = new MetaData();
+    private Map<String, String> metaData = new HashMap<>();
 
     private List<String> resourcescopes = new ArrayList<>();
 
     private List<String> resourceid = new ArrayList<>();
 
-    private List<MetaData> propertyData = new ArrayList<>();
-
     private Timestamp timestamp;
 
+    private MetaDataDO[] metaDataDOArr;
+
+    private ScopeDataDO[] scopeDataDoArr;
+
+    private String resourceOwner;
+
     public String getResourceId() {
+
         return resourceId;
     }
 
     public void setResourceId(String resourceId) {
+
         this.resourceId = resourceId;
     }
 
     public String getName() {
+
         return name;
     }
 
     public void setName(String name) {
+
         this.name = name;
     }
 
-    public MetaData getType() {
-        return type;
-    }
-
-    public void setType(String key, String data) {
-        type.setKey(key);
-        type.setData(data);
-    }
-
-    public MetaData getIconuri() {
-        return iconuri;
-    }
-
-    public void setIcon_uri(String key, String data) {
-        iconuri.setKey(key);
-        iconuri.setData(data);
-    }
-
-    public MetaData getDescription() {
-        return description;
-    }
-
-    public void setDescription(String key, String data) {
-        description.setKey(key);
-        description.setData(data);
-
-    }
-
     public List<String> getScopes() {
+
         return resourcescopes;
     }
 
 
     public void setScopes(List<String> scopes) {
+
         this.resourcescopes = scopes;
     }
 
-    public List<MetaData> getPropertyData() {
-        return propertyData;
-    }
-
-    public void setPropertyData(List<MetaData> propertyData) {
-        this.propertyData = propertyData;
-    }
-
     public Timestamp getTimecreated() {
-        return timestamp; }
+
+        return timestamp;
+    }
 
     public void setTimecreated(Timestamp timecreated) {
+
         this.timestamp = timecreated;
     }
 
     public String getResourceOwnerId() {
+
         return resourceOwnerId;
     }
 
     public void setResourceOwnerId(String resourceOwnerId) {
+
         this.resourceOwnerId = resourceOwnerId;
     }
 
     public String getTenentId() {
+
         return tenentId;
     }
 
     public void setTenentId(String tenentId) {
+
         this.tenentId = tenentId;
     }
 
     public List<String> getResourceid() {
+
         return resourceid;
     }
 
     public void setResourceid(List<String> resourceid) {
+
         this.resourceid = resourceid;
     }
 
-    public ResourceRegistration() {
+    public Map<String, String> getMetaData() {
+
+        return metaData;
+    }
+
+    public MetaDataDO[] getMetaDataDOArr() {
+
+        return metaDataDOArr;
+    }
+
+    public void setMetaDataDOArr(MetaDataDO[] metaDataDOArr) {
+
+        this.metaDataDOArr = metaDataDOArr;
+    }
+
+    public ScopeDataDO[] getScopeDataDOArr() {
+
+        return scopeDataDoArr;
+    }
+
+    public void setScopeDataDOArr(ScopeDataDO[] scopeDataDoArr) {
+
+        this.scopeDataDoArr = scopeDataDoArr;
+    }
+
+    public String getResourceOwner() {
+
+        return resourceOwner;
+    }
+
+    public void setResourceOwner(String resourceOwner) {
+
+        this.resourceOwner = resourceOwner;
+    }
+
+    public ResourceRegistation() {
+
         this.timestamp = new Timestamp(System.currentTimeMillis());
         ;
         this.resourceId = UUID.randomUUID().toString();
         this.resourceOwnerId = "123";
+        this.resourceOwner = "IS";
         this.tenentId = "1";
 
     }
 
-    public ResourceRegistration(String name, MetaData description, List<String> resourcescopes, MetaData iconuri,
-                                MetaData type) {
+    public ResourceRegistation(String name) {
+
         this.resourcescopes = resourcescopes;
-        this.iconuri = iconuri;
-        this.type = type;
         this.name = name;
-        this.description = description;
     }
 }

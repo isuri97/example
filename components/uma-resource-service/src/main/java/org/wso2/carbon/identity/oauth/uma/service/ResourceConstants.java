@@ -55,23 +55,11 @@ public class ResourceConstants {
      * Error codes and messages.
      */
     public enum ErrorMessages {
-        ERROR_CODE_BAD_REQUEST_RESOURCE_ID_NOT_SPECIFIED("41001", "Resource ID is not specified."),
-        ERROR_CODE_BAD_REQUEST_RESOURCE_SCOPES_NOT_SPECIFIED("41002", "Resource scopes is not specified."),
-        ERROR_CODE_NOT_FOUND_RESOURCE("41003", "Resource %s is not found."),
-        ERROR_CODE_CONFLICT_REQUEST_EXISTING_RESOURCE("41004",
-                "Resource with the id %s already exists in the system. Please use a different Resource id."),
-        ERROR_CODE_BAD_REQUEST_RESOURCE_NOT_SPECIFIED("41005", "Resource is not specified."),
-
-        ERROR_CODE_FAILED_TO_REGISTER_RESOURCE("51001", "Error occurred while registering Resource %s."),
-        ERROR_CODE_FAILED_TO_GET_ALL_RESOURCE("51002", "Error occurred while retrieving all available Resource."),
-        ERROR_CODE_FAILED_TO_GET_RESOURCE_BY_ID("51003", "Error occurred while retrieving Resource %s."),
-        ERROR_CODE_FAILED_TO_DELETE_RESOURCE_BY_ID("51004", "Error occurred while deleting Resource %s."),
-        ERROR_CODE_FAILED_TO_UPDATE_RESOURCE_BY_ID("51005", "Error occurred while updating Resource %s."),
-
 
         ERROR_CODE_UNEXPECTED("51007", "Unexpected error"),
         ERROR_CODE_FAIL_TO_GET_RESOURCE("60001", "Error occurred while retrieving Resource."),
-        ERROR_CODE_NOT_FOUND_RESOURCE_ID("60002", "Resource id is not found.");
+        ERROR_CODE_NOT_FOUND_RESOURCE_ID("60002", "Resource id is not found."),
+        ERROR_UNEXPECTED("6005", "Unexpected error.");
 
         private final String code;
         private final String message;

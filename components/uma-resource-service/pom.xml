@@ -116,7 +116,7 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.17</version>
@@ -141,7 +141,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -195,12 +195,12 @@
                             org.wso2.carbon.identity.core.util.*,
                             org.osgi.framework,
                             org.osgi.service.component,
-                           <!-- org.wso2.carbon.identity.xacml.evalution.handler.impl,-->
+                            org.wso2.carbon.identity.xacml.evalution.handler.impl,
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.identity.oauth.uma.service.internal,
                             org.wso2.carbon.identity.oauth.uma.service.*;version="1.0.0-SNAPSHOT",
-                            org.wso2.carbon.identity.oauth.uma.service.exceptions.*,
+                           <!-- org.wso2.carbon.identity.oauth.uma.service.exceptions.*,-->
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

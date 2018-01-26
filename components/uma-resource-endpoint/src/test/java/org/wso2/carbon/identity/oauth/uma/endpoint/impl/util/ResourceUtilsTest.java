@@ -29,7 +29,7 @@ import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ResourceDetailsDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.dto.UpdateResourceDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.impl.exceptions.ResourceEndpointException;
 import org.wso2.carbon.identity.oauth.uma.service.model.MetaData;
-import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
+import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +88,7 @@ public class ResourceUtilsTest {
 
         ErrorDTO errorDTOexpected = new ErrorDTO();
         errorDTOexpected.setCode("AJYRKLWB68NSB9");
-        errorDTOexpected.setMessage("Lifecycle exception occurred");
+       // errorDTOexpected.setMessage("Lifecycle exception occurred");
         errorDTOexpected.setDescription("Error occurred while changing lifecycle state");
 
     }
@@ -100,7 +100,7 @@ public class ResourceUtilsTest {
         MetaData description = new MetaData();
         MetaData iconUri = new MetaData();
         MetaData type = new MetaData();
-        ResourceRegistration resource = new ResourceRegistration("resource1", description, scope, iconUri, type);
+        ResourceRegistation resource = new ResourceRegistation("resource1", description, scope, iconUri, type);
 
         ResourceDetailsDTO resourceDetailsDTO = ResourceUtils.getResourceDTO(resource);
         assertEquals(resourceDetailsDTO.getIcon_uri(), null, "Actual IconUri is not match for expected IconUri");
@@ -118,7 +118,7 @@ public class ResourceUtilsTest {
         List scopes = new ArrayList();
         resourceDetailsDTO.setResource_scopes(scopes);
         resourceDetailsDTO.setName("resource1");
-        ResourceRegistration resource = ResourceUtils.getResource(resourceDetailsDTO);
+        ResourceRegistation resource = ResourceUtils.getResource(resourceDetailsDTO);
         assertEquals(resource.getName(), "resource1");
         assertEquals(resource.getScopes(), scopes);
     }
@@ -131,7 +131,7 @@ public class ResourceUtilsTest {
         MetaData description = new MetaData();
         MetaData iconUri = new MetaData();
         MetaData type = new MetaData();
-        ResourceRegistration resource = new ResourceRegistration("Resource1", description, scope, iconUri, type);
+        ResourceRegistation resource = new ResourceRegistation("Resource1", description, scope, iconUri, type);
         ReadResourceDTO readResourceDTO = ResourceUtils.readResponse(resource);
         assertEquals(readResourceDTO.getResource_scope(), scope, "Actual scopes are not match for expected scopes");
         assertFalse(readResourceDTO.getResource_scope().get(0).contains("Scopes1"));
@@ -151,7 +151,7 @@ public class ResourceUtilsTest {
         MetaData iconUri = new MetaData();
         MetaData type = new MetaData();
 
-        ResourceRegistration resource = new ResourceRegistration("Resource1", description, scope, iconUri, type);
+        ResourceRegistation resource = new ResourceRegistation("Resource1", description, scope, iconUri, type);
         CreateResourceDTO createResourceDTO = ResourceUtils.createResponse(resource);
         assertEquals(createResourceDTO.getResourceId(), null, "Actual ResourceId is not match for expected " +
                 "ResourceId");
@@ -168,7 +168,7 @@ public class ResourceUtilsTest {
         MetaData iconUri = new MetaData();
         MetaData type = new MetaData();
 
-        ResourceRegistration resource = new ResourceRegistration("Resource1", description, scope, iconUri, type);
+        ResourceRegistation resource = new ResourceRegistation("Resource1", description, scope, iconUri, type);
         UpdateResourceDTO updateResourceDTO = ResourceUtils.updateResponse(resource);
         assertEquals(updateResourceDTO.getResourceId(), null, "Actual ResourceId is not match for expected " +
                 "ResourceId");

@@ -19,7 +19,7 @@ package org.wso2.carbon.identity.oauth.uma.service;
 import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAClientException;
 import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAException;
 import org.wso2.carbon.identity.oauth.uma.service.exceptions.UMAServiceException;
-import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistration;
+import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistation;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -33,12 +33,12 @@ public interface ResourceService {
 
     public List<String> getResourceSetIds(String resourceOwnerId) throws UMAException;
 
-    public ResourceRegistration registerResourceSet(ResourceRegistration resourceRegistration)
+    public ResourceRegistation registerResourceSet(ResourceRegistation resourceRegistration)
             throws UMAException;
 
-    public ResourceRegistration getResourceSetById(String resourceid)
+    public ResourceRegistation getResourceSetById(String resourceid)
             throws UMAServiceException, UMAClientException;
 
-    public ResourceRegistration updateResourceSet(String resourceid, ResourceRegistration resourceRegistration)
+    public ResourceRegistation updateResourceSet(String resourceid, ResourceRegistation resourceRegistration)
             throws SQLException, UMAException;
 }
