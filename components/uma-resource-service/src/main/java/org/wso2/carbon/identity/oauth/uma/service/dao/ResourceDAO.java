@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.identity.oauth.uma.service.dao;
 
+import com.mysql.jdbc.Statement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
@@ -67,7 +68,7 @@ public class ResourceDAO {
         try {
             connection.setAutoCommit(false);
             Savepoint savepoint = connection.setSavepoint();
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, resource.getResourceId());
             preparedStatement.setString(2, resource.getName());
             preparedStatement.setTimestamp(3, resource.getTimecreated());
@@ -76,15 +77,16 @@ public class ResourceDAO {
             preparedStatement.execute();
 
             try (ResultSet resultSet1 = preparedStatement.getGeneratedKeys()) {
-
-                long id = resultSet1.getLong(1);
-
+                long id=0;
+                if(resultSet1.next()) {
+                    id = resultSet1.getLong(1);
+                }
                 //purposeIdPrepStat = connection.prepareStatement(purposeIdQuery);
                 //purposeIdPrepStat.setString(1, resource.getResourceId());
                 //resultSet1 = purposeIdPrepStat.executeQuery();
                 // resultSet.first();
                 //mapPurposeWithPurposeCategories(connection, id, resource.getMetaDataDOArr());
-                mapScopeTable(connection, id, resource.getScopeDataDOArr());
+                mapScopeTable(connection, id, resource.getScopes());
                 connection.commit();
                 // ResourceRegistation resourceDetails = retrieveResource(resultSet1.getString(1));
                 //purposeDetails=getPurposeDetailsById(resultSet.getInt(1));
