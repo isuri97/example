@@ -16,10 +16,8 @@
 
 package org.wso2.carbon.identity.oauth.uma.service.dao;
 
-import org.apache.bcel.generic.IF_ACMPEQ;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jasper.tagplugins.jstl.If;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.oauth.uma.service.ResourceConstants;
@@ -90,17 +88,17 @@ public class ResourceDAO {
                 connection.commit();
                 // ResourceRegistation resourceDetails = retrieveResource(resultSet1.getString(1));
                 //purposeDetails=getPurposeDetailsById(resultSet.getInt(1));
-                log.info("Successfully added the purpose details to the database");
+                log.info("Successfully added the resource details to the database");
             } catch (SQLException e) {
                 try {
                     connection.rollback(savepoint);
                 } catch (SQLException e1) {
-                    log.error("Rollback error. Could not rollback purpose adding. - " + e.getMessage());
+                    log.error("Rollback error. Could not rollback resource adding. - " + e.getMessage());
                     throw new UMAServiceException("Rollback error. Could not rollback purpose adding. - " + e
                             .getMessage(), e);
                 }
-                log.error("Database error. Could not add purpose details. - " + e.getMessage(), e);
-                throw new UMAServiceException("Database error. Could not add purpose details. - " + e.getMessage(),
+                log.error("Database error. Could not add resource details. - " + e.getMessage(), e);
+                throw new UMAServiceException("Database error. Could not add resource details. - " + e.getMessage(),
                         e);
            /* } finally {
                 // DBUtils.closeAllConnections(connection, preparedStatement, purposeIdPrepStat, resultSet);
@@ -149,9 +147,9 @@ public class ResourceDAO {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            log.error("Database error. Could not map purpose to personally identifiable info category. - " + e
+            log.error("Database error. Could not map resource to personally identifiable info category. - " + e
                     .getMessage(), e);
-            throw new UMAServiceException("Database error. Could not map purpose to personally identifiable info " +
+            throw new UMAServiceException("Database error. Could not map resource to personally identifiable info " +
                     "category. - " + e.getMessage(), e);
         } finally {
             //DBUtils.closeAllConnections(preparedStatement);
@@ -337,21 +335,23 @@ public class ResourceDAO {
     public boolean deleteResource(String resourceId) throws SQLException, UMAException {
 
         Connection connection = IdentityDatabaseUtil.getDBConnection();
-        String deleteResource = "DELETE FROM IDN_RESOURCE WHERE ID_RESOURCE = ? WHERE ID = ?";
+        String deleteResource = "DELETE FROM IDN_RESOURCE WHERE ID_RESOURCE = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(deleteResource);
             preparedStatement.setString(1, resourceId);
-            int rowsAffected = preparedStatement.executeUpdate();
-            connection.commit();
-            return rowsAffected > 0;
+           int rowsAffected = preparedStatement.executeUpdate();
+
 
             deleteMetaDataMapWithId(connection, resourceId);
-            deleteScopeMapWithId(connection, resourceId);
+
+            connection.commit();
+
+            return rowsAffected > 0;
 
         } catch (SQLException e) {
-            log.error("Database error. Could not delete purpose category. - " + e.getMessage(), e);
-            throw new UMAException("Database error. Could not delete purpose categories. - " + e.getMessage(), e)
+            log.error("Database error. Could not delete resource category. - " + e.getMessage(), e);
+            throw new UMAException("Database error. Could not delete resource categories. - " + e.getMessage(), e);
         }
     }
 
@@ -362,16 +362,16 @@ public class ResourceDAO {
         String deletemetadata = "DELETE FROM IDN_RESOURCE_META_DATA WHERE IDN_RESOURCE_META_DATA.ID_RESOURCE = ( " +
                 "SELECT ID FROM IDN_RESOURCE WHERE RESOURCE_ID = ?";
         //delete from table2 where table2.ID_RESOURCE = (SELECT ID FROM table1 WHERE RESOURCE_ID = ?);
-
-
         try {
-            PreparedStatement deletePurposeCatStat = connection.prepareStatement(deletemetadata);
-            deletePurposeCatStat.setString(1, resourceId);
-            deletePurposeCatStat.executeUpdate();
+            PreparedStatement deleteMetaData = connection.prepareStatement(deletemetadata);
+            deleteMetaData.setString(1, resourceId);
+            deleteMetaData.executeUpdate();
+
             deleteScopeMapWithId(connection, resourceId);
+
         } catch (SQLException e) {
-            log.error("Database error. Could not delete purpose category. - " + e.getMessage(), e);
-            throw new UMAException("Database error. Could not delete purpose categories. - " + e.getMessage(), e);
+            log.error("Database error. Could not delete resource category. - " + e.getMessage(), e);
+            throw new UMAException("Database error. Could not delete resource categories. - " + e.getMessage(), e);
         }
     }
 
@@ -379,16 +379,16 @@ public class ResourceDAO {
     private void deleteScopeMapWithId(Connection connection, String resourceId) throws SQLException,
             UMAException {
 
-        PreparedStatement deletePersonalInfoCatStat = null;
-        String deleteScopeInfo = "DELETE FROM IDN_SCOPE WHERE ID=?";
+        PreparedStatement deleteScopeInfo = null;
+        String deleteScope = "DELETE FROM IDN_SCOPE WHERE IDN_SCOPE.ID_RESOURCE = ( SELECT ID FROM IDN_SCOPE WHERE " +
+                "RESOURCE_ID = ?";
         try {
-            deletePersonalInfoCatStat = connection.prepareStatement(deleteScopeInfo);
-            deletePersonalInfoCatStat.setString(1, resourceId);
-            deletePersonalInfoCatStat.executeUpdate();
+            deleteScopeInfo = connection.prepareStatement(deleteScope);
+            deleteScopeInfo.setString(1, resourceId);
+            deleteScopeInfo.executeUpdate();
         } catch (SQLException e) {
-            log.error("Database error. Could not delete personally identifiable categories. - " + e.getMessage(), e);
-            throw new UMAException("Database error. Could not delete personally identifiable categories. - " + e
-                    .getMessage(), e);
+            log.error("Database error. Could not delete resource category. - " + e.getMessage(), e);
+            throw new UMAException("Database error. Could not delete resource categories. - " + e.getMessage(), e);
         }
     }
 

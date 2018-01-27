@@ -44,21 +44,24 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public ResourceRegistation registerResourceSet(ResourceRegistation resourceRegistration) throws
             UMAException {
+
+        resourceRegistration = resourceDAO.registerResource(resourceRegistration);
+        return resourceRegistration;
+    }
+
         // check whether the resource id is provided
        /* if (StringUtils.isBlank(resourceRegistration.getName())) {
             String errorMessage = "Resource name can not be null.";
             throw new UMAClientException(404, errorMessage);
         } else {*/
-            try {
 
-                resourceRegistration = resourceDAO.registerResource(resourceRegistration);
-            } catch (UMAServiceException e) {
+
+        /*    } catch (UMAServiceException e) {
                 String errorMessage = "Resource id is not persistant on db.";
                 throw new UMAClientException(404, "Resource id not found", errorMessage);
             }
+*/
 
-            return resourceRegistration;
-        }
 
 
     /**
@@ -72,16 +75,14 @@ public class ResourceServiceImpl implements ResourceService {
     public List<String> getResourceSetIds(String resourceOwnerId) throws UMAException {
         // return resourceDAO.retrieveResourceIDs(accessToken);
 
-        List<String> resourceRegistration = null;
+/*
+        try {*/
+        List<String> resourceRegistration = resourceDAO.retrieveResourceIDs(resourceOwnerId);
 
-
-        try {
-            resourceRegistration = resourceDAO.retrieveResourceIDs(resourceOwnerId);
-
-        } catch (UMAServiceException e) {
+       /* } catch (UMAServiceException e) {
             String errorMessage = "Resource Owner id is not persistant on db.";
             throw new UMAClientException(404, "Resource List not found", errorMessage);
-        }
+        }*/
 
         return resourceRegistration;
     }
@@ -97,28 +98,27 @@ public class ResourceServiceImpl implements ResourceService {
             throws UMAServiceException, UMAClientException {
 
 
-        ResourceRegistation resourceRegistration = null;
 
         //Method which used to evaluate xacml policy
 
         XACMLBasedAuthorizationHandler xacmlBasedAuthorizationHandler = new XACMLBasedAuthorizationHandler();
         xacmlBasedAuthorizationHandler.isAuthorized();
 
-        if (isResourceId(resourceid)) {
+       /* if (isResourceId(resourceid)) {
             String errorMessage = "Resource id is not in defined format.";
             throw new UMAClientException(400, "invalid_resource_id", errorMessage);
 
         } else {
-            try {
-                resourceRegistration = resourceDAO.retrieveResource(resourceid);
-            } catch (UMAServiceException e) {
+            try {*/
+                ResourceRegistation resourceRegistration = resourceDAO.retrieveResource(resourceid);
+          /*  } catch (UMAServiceException e) {
                 String errorMessage = "Resource id is not persistant on db.";
                 throw new UMAClientException(404, "Resource id not found", errorMessage);
-            }
+            }*/
             return resourceRegistration;
 
         }
-    }
+
 
     /**
      * Update the resource of the given resource ID
@@ -132,20 +132,20 @@ public class ResourceServiceImpl implements ResourceService {
             throws SQLException, UMAException {
 
 
-        if (isResourceId(resourceid)) {
+       /* if (isResourceId(resourceid)) {
             String errorMessage = "Resource id is not in defined format.";
             throw new UMAClientException(400, "invalid_resource_id", errorMessage);
 
         } else {
-            try {
-                resourceDAO.updateResource(resourceid, resourceRegistration);
-            } catch (UMAServiceException e) {
+            try {*/
+        resourceDAO.updateResource(resourceid, resourceRegistration);
+            /*} catch (UMAServiceException e) {
                 String errorMessage = "Resource id is not persistant on db.";
                 throw new UMAClientException(404, "Resource id not found", errorMessage);
-            }
+            }*/
             return resourceRegistration;
         }
-    }
+
 
     /**
      * Delete the resource for the given resource ID
@@ -158,19 +158,19 @@ public class ResourceServiceImpl implements ResourceService {
 
         ResourceRegistation resourceRegistration = null;
 
-        if (isResourceId(resourceid)) {
+      /*  if (isResourceId(resourceid)) {
             String errorMessage = "Resource id is not in defined format.";
             throw new UMAClientException(400, "invalid_resource_id", errorMessage);
 
         } else {
-            try {
+            try {*/
                 resourceDAO.deleteResource(resourceid);
-            } catch (UMAServiceException e) {
+            /*} catch (UMAServiceException e) {
                 String errorMessage = "Resource id is not persistant on db.";
                 throw new UMAClientException(404, "Resource id not found", errorMessage);
             }
         }
-
+*/
         return false;
     }
 
