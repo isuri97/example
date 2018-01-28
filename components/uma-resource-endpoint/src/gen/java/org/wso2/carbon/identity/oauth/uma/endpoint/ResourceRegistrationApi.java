@@ -13,6 +13,7 @@ import org.wso2.carbon.identity.oauth.uma.endpoint.dto.UpdateResourceDTO;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.*;
 
+
 @Path("/ResourceRegistration")
 @Consumes({ "application/json" })
 @Produces({ "application/json" })
