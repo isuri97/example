@@ -139,7 +139,8 @@ public class ResourceDAO {
     private void mapScopeTable(Connection connection, long id, List<ScopeDataDO>
             ScopeData) throws UMAServiceException {
 
-        String query = "INSERT INTO IDN_SCOPE(ID_RESOURCE,SCOPE_NAME) VALUES (?,?) ON DUPLICATE KEY UPDATE ID_RESOURCE=?;";
+        String query = "INSERT INTO IDN_SCOPE(ID_RESOURCE,SCOPE_NAME) VALUES ((SELECT ID FROM IDN_RESOURCE WHERE " +
+                "RESOURCE_ID = ?),?) ON DUPLICATE KEY UPDATE ID_RESOURCE=?;";
         try {
             for (ScopeDataDO scopeDataDO : ScopeData) {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
