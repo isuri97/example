@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.oauth.uma.endpoint.dto.ResourceDetailsDTO;
 import org.wso2.carbon.identity.oauth.uma.endpoint.dto.UpdateResourceDTO;
 import org.wso2.carbon.identity.oauth.uma.service.ResourceService;
 import org.wso2.carbon.identity.oauth.uma.service.model.ResourceRegistation;
+import org.wso2.carbon.identity.oauth.uma.service.model.ScopeDataDO;
 
 
 /**
@@ -47,6 +48,10 @@ public class ResourceUtils {
         ResourceRegistation resourceRegistration = new ResourceRegistation();
         resourceRegistration.setName(resourceDetailsDTO.getName());
         resourceRegistration.setScopes(resourceDetailsDTO.getResource_scopes());
+        for (String scope:resourceRegistration.getScopes()){
+            resourceRegistration.getScopeDataDOArr().add(new ScopeDataDO(resourceRegistration.getResourceId(),scope));
+        }
+
         if (resourceDetailsDTO.getIcon_uri() != null) {
             resourceRegistration.getMetaData().put("icon_uri", resourceDetailsDTO.getIcon_uri());
         }

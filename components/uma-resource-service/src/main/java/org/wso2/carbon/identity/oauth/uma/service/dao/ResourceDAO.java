@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.identity.oauth.uma.service.dao;
 
+import com.mysql.jdbc.Statement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
@@ -31,7 +32,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +68,7 @@ public class ResourceDAO {
         try {
             connection.setAutoCommit(false);
             Savepoint savepoint = connection.setSavepoint();
-            PreparedStatement preparedStatement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, resource.getResourceId());
             preparedStatement.setString(2, resource.getName());
             preparedStatement.setTimestamp(3, resource.getTimecreated());
@@ -77,10 +77,7 @@ public class ResourceDAO {
             preparedStatement.execute();
 
             try (ResultSet resultSet1 = preparedStatement.getGeneratedKeys()) {
-
-
-
-                long id = 0;
+                long id=0;
                 if(resultSet1.next()) {
                     id = resultSet1.getLong(1);
                 }
@@ -88,8 +85,8 @@ public class ResourceDAO {
                 //purposeIdPrepStat.setString(1, resource.getResourceId());
                 //resultSet1 = purposeIdPrepStat.executeQuery();
                 // resultSet.first();
-                mapPurposeWithPurposeCategories(connection, id, resource.getMetaData());
-                mapScopeTable(connection, id, resource.getScopes());
+                //mapPurposeWithPurposeCategories(connection, id, resource.getMetaDataDOArr());
+                mapScopeTable(connection, id, resource.getScopeDataDOArr());
                 connection.commit();
                 // ResourceRegistation resourceDetails = retrieveResource(resultSet1.getString(1));
                 //purposeDetails=getPurposeDetailsById(resultSet.getInt(1));
@@ -115,43 +112,40 @@ public class ResourceDAO {
         return resource;
     }
 
-    private void mapPurposeWithPurposeCategories(Connection connection, long id, Map<String, String>
+   /* private void mapPurposeWithPurposeCategories(Connection connection, long id, MetaDataDO[]
             metaDataValues) throws UMAServiceException {
-
-        ResourceRegistation resource = null;
-        String query = "INSERT INTO IDN_RESOURCE_META_DATA(ID_RESOURCE,PROPERTY_KEY,PROPERTY_VALUE)" +
-                "VALUES ((SELECT ID FROM IDN_RESOURCE WHERE RESOURCE_ID = ?),?,?) ON DUPLICATE KEY UPDATE " +
-                "ID_RESOURCE=?;";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            for (Map.Entry<String, String> entry : resource.getMetaData().entrySet()) {
-                preparedStatement.setString(2, entry.getKey());
-                preparedStatement.setString(3, entry.getValue());
-                preparedStatement.execute();
-            }
-        } catch (SQLException e) {
-            log.error("Database error. Could not map resource to resource category. - " + e.getMessage(), e);
-            throw new UMAServiceException("Database error. Could not map resource to purpose category. - " + e
-                    .getMessage(), e);
-        } finally {
-             //DBUtils.closeAllConnections(preparedStatement);
-        }
-    }
-
-
-    private void mapScopeTable(Connection connection, long id, List<String>
+                String query = "INSERT INTO IDN_RESOURCE_META_DATA(ID_RESOURCE,PROPERTY_KEY,PROPERTY_VALUE)" +
+                        "VALUES ((SELECT ID FROM IDN_RESOURCE WHERE RESOURCE_ID = ?),?,?) ON DUPLICATE KEY UPDATE " +
+                        "ID_RESOURCE=?;";
+                try {
+                    PreparedStatement preparedStatement = connection.prepareStatement(query);
+                    *//*for (MetaDataDO metadata : metaDataValues) {*//*
+                        preparedStatement.setLong(1, id);
+                        for (Map.Entry<String, String> entry : resource.getMetaData().entrySet()) {
+                            preparedStatement.setString(2, entry.getKey());
+                            preparedStatement.setString(3, entry.getValue());
+                            preparedStatement.execute();
+                    }
+                } catch (SQLException e) {
+                    log.error("Database error. Could not map purpose to purpose category. - " + e.getMessage(), e);
+                    throw new UMAServiceException("Database error. Could not map purpose to purpose category. - " + e
+                            .getMessage(), e);
+                } finally {
+                   // DBUtils.closeAllConnections(preparedStatement);
+                }
+    private void mapScopeTable(Connection connection, long id, List<ScopeDataDO>
             ScopeData) throws UMAServiceException {
-        ResourceRegistation resource = null;
 
         String query = "INSERT INTO IDN_SCOPE(ID_RESOURCE,SCOPE_NAME) VALUES ((SELECT ID FROM IDN_RESOURCE WHERE " +
                 "RESOURCE_ID = ?),?) ON DUPLICATE KEY UPDATE ID_RESOURCE=?;";
         try {
-
+            for (ScopeDataDO scopeDataDO : ScopeData) {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setLong(1, id);
-                preparedStatement.setString(2, String.valueOf(resource.getScopes()));
+                preparedStatement.setLong(3, id);
+                preparedStatement.setString(2, scopeDataDO.getScopeName());
                 preparedStatement.executeUpdate();
-
+            }
         } catch (SQLException e) {
             log.error("Database error. Could not map resource to personally identifiable info category. - " + e
                     .getMessage(), e);
