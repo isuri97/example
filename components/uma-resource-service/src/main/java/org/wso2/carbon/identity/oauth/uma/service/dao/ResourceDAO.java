@@ -86,7 +86,7 @@ public class ResourceDAO {
                 //resultSet1 = purposeIdPrepStat.executeQuery();
                 // resultSet.first();
                 //mapPurposeWithPurposeCategories(connection, id, resource.getMetaDataDOArr());
-                mapScopeTable(connection, id, resource.getScopes());
+                mapScopeTable(connection, id, resource.getScopeDataDOArr());
                 connection.commit();
                 // ResourceRegistation resourceDetails = retrieveResource(resultSet1.getString(1));
                 //purposeDetails=getPurposeDetailsById(resultSet.getInt(1));
@@ -136,15 +136,15 @@ public class ResourceDAO {
             }*/
 
 
-    private void mapScopeTable(Connection connection, long id, ScopeDataDO[]
+    private void mapScopeTable(Connection connection, long id, List<ScopeDataDO>
             ScopeData) throws UMAServiceException {
 
-        String query = "INSERT INTO IDN_SCOPE(ID_RESOURCE,SCOPE_NAME) VALUES ((SELECT ID FROM IDN_RESOURCE WHERE " +
-                "RESOURCE_ID = ?),?) ON DUPLICATE KEY UPDATE ID_RESOURCE=?;";
+        String query = "INSERT INTO IDN_SCOPE(ID_RESOURCE,SCOPE_NAME) VALUES (?,?) ON DUPLICATE KEY UPDATE ID_RESOURCE=?;";
         try {
             for (ScopeDataDO scopeDataDO : ScopeData) {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setLong(1, id);
+                preparedStatement.setLong(3, id);
                 preparedStatement.setString(2, scopeDataDO.getScopeName());
                 preparedStatement.executeUpdate();
             }

@@ -46,7 +46,7 @@ public class ResourceRegistation {
 
     private MetaDataDO[] metaDataDOArr;
 
-    private ScopeDataDO[] scopeDataDoArr;
+    private List<ScopeDataDO> scopeDataDoArr = new ArrayList<>();
 
     private String resourceOwner;
 
@@ -136,12 +136,12 @@ public class ResourceRegistation {
         this.metaDataDOArr = metaDataDOArr;
     }
 
-    public ScopeDataDO[] getScopeDataDOArr() {
+    public List<ScopeDataDO> getScopeDataDOArr() {
 
         return scopeDataDoArr;
     }
 
-    public void setScopeDataDOArr(ScopeDataDO[] scopeDataDoArr) {
+    public void setScopeDataDOArr(List<ScopeDataDO> scopeDataDoArr) {
 
         this.scopeDataDoArr = scopeDataDoArr;
     }
